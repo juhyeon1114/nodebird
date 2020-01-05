@@ -1,0 +1,21 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2019,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/recommended"
+  ],
+  "plugins": [],
+  "rules": {
+    "vue/max-attributes-per-line": "off",
+    "vue/singleline-html-element-content-newline": "off",
+    "vue/html-indent": "off"
+  }
+}
+
+// 코드 스타일과 문법을 정하고 체크할 수 있음
