@@ -54,6 +54,12 @@ export const actions = { //비동기적 작업
     signUp( {commit, state} , payload){
         // context는 {commit, dispatch, state, rootState, getters, rootGetters}로 구조분해 가능.
         // (root가 붙은 것은 index모듈의 것)
+        console.log(payload);
+        this.$axios.post('/user', {
+            email: payload.email,
+            nickname: payload.nickname,
+            password: payload.password,
+        }); //root경로에 post방식으로 request
         commit('setMe', payload);
     },
     logIn( {commit}, payload){

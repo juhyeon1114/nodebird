@@ -90,9 +90,10 @@
     methods: {
       onSubmitForm() {
         if (this.$refs.form.validate()) {
-          this.$store.dispatch('users/logIn', { //dispatch는 promise임. 동기적 동작이 필요한 경우 then으로 가능
+          this.$store.dispatch('users/signUp', { //dispatch는 promise임. 동기적 동작이 필요한 경우 then으로 가능
             email: this.email,
-            nickname: "hello",
+            nickname: this.nickname,
+            password: this.password,
           })
           .then(()=>{
             this.$router.push({
