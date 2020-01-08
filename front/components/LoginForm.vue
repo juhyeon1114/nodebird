@@ -37,8 +37,8 @@
     data() {
       return {
         valid: false,
-        email: '',
-        password: '',
+        email: 'hi@naver.com',
+        password: '123',
         emailRules: [
           v => !!v || '이메일은 필수입니다.',
           v => /.+@.+/.test(v) || '이메일이 유효하지 않습니다.',
@@ -58,7 +58,7 @@
         if(this.$refs.form.validate()){
           this.$store.dispatch('users/logIn', { 
             email: this.email,
-            nickname: 'hello',
+            password: this.password,
           });
         }
       },

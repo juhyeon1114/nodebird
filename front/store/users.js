@@ -58,14 +58,35 @@ export const actions = { //비동기적 작업
             email: payload.email,
             nickname: payload.nickname,
             password: payload.password,
-        }); //root경로에 post방식으로 request
-        commit('setMe', payload);
+        }, {
+            withCredentials : true, // 프론트와 백 사이의 쿠키 저장을 허용 (in axios)
+        } ).then((res)=>{
+            commit('setMe', res.data);
+        }).catch((err)=>{
+            console.error(err);
+        });
+        
     },
     logIn( {commit}, payload){
-        commit('setMe', payload);
+        this.$axios.post("http://localhost:3085/user/login", {
+            email : payload.email,
+            nickname : payload.nickname,
+            password : payload.password,
+        }, {
+            withCredentials : true, // 프론트와 백 사이의 쿠키 저장을 허용(in axios)
+        } ).then((res)=>{
+            commit('setMe', res.data);
+        }).catch((err)=>{
+            console.error(err);
+        });;
     },
     logOut( {commit}, payload){
-        commit('setMe', null);
+        this.$axios.post("http://localhost:3085/user/logout", {}, {withCredentials : true})
+        .then(() => {
+            commit('setMe', null);
+        }).catch((err) => {
+            console.error(err);
+        });
     },
     changeNickname({commit},payload){
         commit('changeNickname', payload);

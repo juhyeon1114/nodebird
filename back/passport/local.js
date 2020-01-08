@@ -10,7 +10,7 @@ module.exports = () => {
     }, async (email, password, done) => {
         // 이하 : login 가능한지 판단
         try {
-            const exUser = await db.User.findOne({ where : { email : req.body.email } });
+            const exUser = await db.User.findOne({ where : { email : email } });
             if(!exUser){
                 return done(null, false, {reason : '존재하지 않는 사용자입니다.'});
                 // done(에러, 성공, 실패);
@@ -25,6 +25,5 @@ module.exports = () => {
             console.log(err);
             return done(err)
         }
-        
     }));
 }
