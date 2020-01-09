@@ -8,6 +8,7 @@ const limit = 10;
 export const mutations = {
     addMainPost(state, payload){
         state.mainPosts.unshift(payload);
+        state.imagePaths = [];
     },
     removeMainPost(state, payload){
         const index = state.mainPosts.findIndex(v => v.id === payload.id);
@@ -29,18 +30,7 @@ export const mutations = {
             Comments:[],
             Images:[],
         }));
-        const fakePosts2 = Array(diff > limit ? limit : diff).fill().map(v=>({
-            id: Math.random().toString(),
-            User:{
-                id:1,
-                nickname:'hi',
-            },
-            content:"bye",
-            Comments:[],
-            Images:[],
-        }));
         state.mainPosts = state.mainPosts.concat(fakePosts);
-        state.mainPosts = state.mainPosts.concat(fakePosts2);
         state.hasMorePost = fakePosts.length === limit;
     },
     concatImagePaths(state, payload){
@@ -52,6 +42,19 @@ export const mutations = {
 };
 export const actions = {
     add({commit}, payload){
+        this.$axios.post('http://localhost:3085/post', {
+            content : payload.content,
+            imagePaths : state.imagePaths,
+        }, {
+            withCredentials : true,
+        })
+        .then(()=>{
+            console.log(res.data);
+            commit('addMainPost', res.data);
+        })
+        .catch(()=>{
+            
+        });
         commit('addMainPost', payload);
     },
     remove({commit}, payload) {
@@ -60,14 +63,14 @@ export const actions = {
     addComment({commit}, payload){
         commit('addComment', payload);
     },
-    loadPosts({commit, state},payload){
+    loadPosts({commit, state}, payload){
         if(state.hasMorePost){
             commit('loadPosts');
         }
     },
     uploadImages ({commit}, payload){
         this.$axios.post('http://localhost:3085/post/images', payload, {
-            withCredentials : true,
+            withCredentials: true,
         })
         .then((res)=>{
             commit('concatImagePaths', res.data);

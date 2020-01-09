@@ -2,10 +2,10 @@
     <v-card style="margin-bottom: 20px">
         <v-form ref="form" v-model="valid" @submit.prevent="onSubmitForm">
             <v-textarea
+                v-model="content"
                 outlined
                 auto-grow
                 clearable
-                v-model="content"
                 :hide-details="hideDetails"
                 :success-message="successMessages"
                 :success="success"
@@ -57,13 +57,6 @@
                 if( this.$refs.form.validate() ){
                     this.$store.dispatch('posts/add',{
                         content: this.content,
-                        User: {
-                            nickname : this.me.nickname
-                        },
-                        Comments : [],
-                        Images : [],
-                        id: Date.now(),
-                        createdAt: Date.now(),
                     })
                     .then(()=>{
                         this.content = '';

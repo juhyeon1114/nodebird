@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         db.Post.hasMany(db.Comment);
         db.Post.hasMany(db.Image);
         db.Post.belongsToMany(db.Hashtag, {through : 'PostHashtag'});
+        // 관계 설정을 하면 add(추가), get(조회), set(수정), remove(제거) 메서드가 생김
+        // ex) addImage, removeComment ... 
     };
     return Post;
 }
