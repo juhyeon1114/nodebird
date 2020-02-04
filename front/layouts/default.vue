@@ -56,7 +56,7 @@
             });
             this.hashtag ='';
           }
-        }
+        },
     };
 </script>
 

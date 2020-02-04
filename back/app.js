@@ -1,6 +1,6 @@
 const express = require('express');
-const cors = require('cors');
-const passport = require('passport');
+const cors = require('cors'); // Cross Origin Resource Sharing : 한 도메인에서 로드되어 다른 도메인에 있는 리소스와 상호 작용하는 클라이언트 웹 앱에 대한 벙법을 정의한다.
+const passport = require('passport'); //로그인 관리
 const session = require('express-session'); //session = 쿠키를 기본으로 해서 기능을 확장한 것
 const cookie = require('cookie-parser');
 const morgan = require('morgan');
@@ -9,6 +9,7 @@ const db = require('./models');
 const passportConfig = require('./passport');
 const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
 
 const app = express();
 
@@ -17,9 +18,9 @@ passportConfig();
 
 app.use(morgan('dev')); // 요청을 console창에 보여주는 미들웨어
 // app.use(cors()); -> 모든 요청을 허용
-//app.use(cors('http://localhost:3000'));
+// app.use(cors('http://localhost:3000'));
 app.use(cors({
-    origin : 'http://localhost:3000',
+    origin : 'http://localhost:3080',
     credentials : true, //프론트와 백엔드 사이에 쿠키를 주고 받을 수 있도록
 }));
 app.use('/', express.static('uploads')); //front에서 uploads 폴더에 접근할 수 있다. '/' = 프론트에서 접근할 주소(가상의 주소, 보안)
@@ -43,6 +44,7 @@ app.get('/',(req, res)=>{
 });
 app.use('/user', userRouter);
 app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 
 app.listen(3085, ()=>{
     console.log(`백엔드 서버 ${3085}번 포트에서 작동 중`)

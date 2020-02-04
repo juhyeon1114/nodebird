@@ -31,11 +31,6 @@
         type : Function,
         required : true,
       }
-    },
-    data(){
-      return {
-
-      }
     }
   }
 </script>

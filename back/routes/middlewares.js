@@ -14,7 +14,7 @@ exports.isNotLoggedIn = (req, res, next) => {
     return res.status(401).send('로그인한 사람은 이용할 수 없습니다.');
 };
 
-/*
+/*ㅊ
     module.exports = 대표적인 기능을 하는 것을 export하는 것.
     exports.(something) = 대표적인 기능이 딱히 없이 일반적인 것들을 export할 때.
 */

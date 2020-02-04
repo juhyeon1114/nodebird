@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-container>
-
       <v-card style="margin-bottom: 20px">
         <v-container>
           <v-subheader>내 프로필</v-subheader>
@@ -32,7 +31,6 @@
           <v-btn @click="loadMoreFollowers" v-if="hasMoreFollower" dark color="blue" style="width: 100%">더보기</v-btn>
         </v-container>
       </v-card>
-
     </v-container>
   </div>
 </template>
@@ -68,8 +66,8 @@
       };
     },
     fetch({store}){
-      store.dispatch('users/loadFollowings');
-      store.dispatch('users/loadFollowers');
+      store.dispatch('users/loadFollowers', {offset: 0});
+      return store.dispatch('users/loadFollowings', {offset: 0});
     },
     methods:{
       onChangeNickname(){

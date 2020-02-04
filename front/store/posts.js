@@ -11,65 +11,98 @@ export const mutations = {
         state.imagePaths = [];
     },
     removeMainPost(state, payload){
-        const index = state.mainPosts.findIndex(v => v.id === payload.id);
+        const index = state.mainPosts.findIndex(v => v.id === payload.postId);
         state.mainPosts.splice(index, 1);
     },
     addComment(state, payload){
         const index = state.mainPosts.findIndex(v => v.id === payload.postId);
         state.mainPosts[index].Comments.unshift(payload);
     },
-    loadPosts(state,payload){
-        const diff = totalPosts - state.mainPosts.length;
-        const fakePosts = Array(diff > limit ? limit : diff).fill().map(v=>({
-            id: Math.random().toString(),
-            User:{
-                id:1,
-                nickname:'제로초',
-            },
-            content:"hello world",
-            Comments:[],
-            Images:[],
-        }));
-        state.mainPosts = state.mainPosts.concat(fakePosts);
-        state.hasMorePost = fakePosts.length === limit;
+    loadPosts(state, payload){
+        state.mainPosts = state.mainPosts.concat(payload);
+        state.hasMorePost = payload.length === limit;
+    },
+    loadComments(state, payload){
+        const index = state.mainPosts.findIndex(v => v.id === payload.postId);
+        state.mainPosts[index].Comments = payload;
     },
     concatImagePaths(state, payload){
         state.imagePaths = state.imagePaths.concat(payload);
     },
     removeImagePath(state, payload){
         state.imagePaths.splice(payload,1);
+    },
+    likePost(state, payload){
+        const index = state.mainPosts.findIndex(v => v.id === payload.postId);
+        state.mainPosts[index].Likers.push({
+            id: payload.userId,
+        })
+    }, 
+    unlikePost(state, payload){
+        const index = state.mainPosts.findIndex(v => v.id === payload.postId);
+        const userIndex = state.mainPosts[index].Likers.findIndex(v => v.id === payload.userId);
+        state.mainPosts[index].Likers.splice(userIndex, 1);
     }
 };
 export const actions = {
-    add({commit}, payload){
-        this.$axios.post('http://localhost:3085/post', {
+    add({commit, state}, payload){
+        this.$axios.post('/post', {
             content : payload.content,
-            imagePaths : state.imagePaths,
+            image : state.imagePaths,
         }, {
             withCredentials : true,
         })
-        .then(()=>{
-            console.log(res.data);
+        .then((res)=>{
             commit('addMainPost', res.data);
         })
-        .catch(()=>{
-            
+        .catch((err)=>{
+            console.error(err);
         });
-        commit('addMainPost', payload);
     },
     remove({commit}, payload) {
-        commit('removeMainPost', payload);
+        this.$axios.delete(`/post/${payload.postId}`, {
+            withCredentials:true, 
+        })
+        .then(()=>{
+            commit('removeMainPost', payload);
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
     },
     addComment({commit}, payload){
-        commit('addComment', payload);
+        this.$axios.post(`/post/${payload.postId}/comment`, {
+            content: payload.content,
+        }, {withCredentials:true})
+        .then((res)=>{
+            commit('addComment', res.data);
+        })
+        .catch(()=>{
+
+        });
+    },
+    loadComment({commit}, payload){
+        this.$axios.get(`/post/${payload.postId}/comments`)
+        .then((res)=>{
+            commit('loadComments', res.data);
+        })
+        .catch(()=>{
+
+        });
     },
     loadPosts({commit, state}, payload){
         if(state.hasMorePost){
-            commit('loadPosts');
+            this.$axios.get(`/posts?offset=${state.mainPosts.length}&limit=10`)
+            .then((res) => {
+                commit('loadPosts', res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
         }
     },
     uploadImages ({commit}, payload){
-        this.$axios.post('http://localhost:3085/post/images', payload, {
+        this.$axios.post('/post/images', payload, {
             withCredentials: true,
         })
         .then((res)=>{
@@ -79,4 +112,44 @@ export const actions = {
             console.error(err);
         })
     },
+    retweet({commit}, payload){
+        this.$axios.post(`/post/${payload.postId}/retweet`, {}, {
+            withCredentials: true,
+        })
+        .then((res)=>{
+            commit('addMainPost',res.data);
+        })
+        .catch((err)=>{
+            console.error(err);
+            alert(err.response.data);
+        });
+    },
+    likePost({commit}, payload){
+        this.$axios.post(`/post/${payload.postId}/like`, {}, {
+            withCredentials: true,
+        })
+        .then((res)=>{
+            commit('likePost', {
+                userId: res.data.userId,
+                postId: payload.postId,
+            });
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
+    },
+    unlikePost({commit}, payload){
+        this.$axios.delete(`/post/${payload.postId}/like`, {
+            withCredentials: true,
+        })
+        .then((res)=>{
+            commit('unlikePost', {
+                userId: res.data.userId,
+                postId: payload.postId,
+            });
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
+    }
 };

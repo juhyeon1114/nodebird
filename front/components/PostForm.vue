@@ -17,8 +17,8 @@
             <input ref="imageInput" type="file" multiple hidden @change="onChangeImages">
             <v-btn type="button" @click="onClickImageUpload">이미지 업로드</v-btn>
             <div>
-                <div v-for="p in imagePaths" :key="p" style="display : inline-block">
-                    <img :src="`http://loacalhost:3085/${p}`" :alt="p" style="width : 200px">
+                <div v-for="(p, i) in imagePaths" :key="p" style="display : inline-block">
+                    <img :src="`http://localhost:3085/${p}`" :alt="p" style="width : 200px">
                     <div>
                         <button @click="onRemoveImage(i)" type="button">제거</button>
                     </div>
@@ -74,7 +74,6 @@
             },  
             onChangeImages(e){
                 // image는 주로 form data 형식으로 전송함
-                console.log(e.target.files);
                 const imageFormData = new FormData();
                 // e.target.files (파일의 목록)은 배열이 아닌 객체이므로 아래와 같이 강제적으로 foreach문을 실행시킨다
                 [].forEach.call(e.target.files, (f) => {

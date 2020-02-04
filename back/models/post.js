@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
         db.Post.belongsTo(db.User); //UserId 자동 추가
         db.Post.hasMany(db.Comment);
         db.Post.hasMany(db.Image);
+        db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers'}); //LikersId 생김
         db.Post.belongsToMany(db.Hashtag, {through : 'PostHashtag'});
+        db.Post.belongsTo(db.Post, {as : 'Retweet'}); // RetweetId가 생김, 자신(테이블)과 자신과의 관계 선언
         // 관계 설정을 하면 add(추가), get(조회), set(수정), remove(제거) 메서드가 생김
         // ex) addImage, removeComment ... 
     };

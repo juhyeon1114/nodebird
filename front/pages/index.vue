@@ -32,13 +32,15 @@
         return this.$store.state.posts.hasMorePost;
       }
     },
-    fetch({store}){
+    fetch({ store }){
       // 컴포넌트가 마운트되기 전에 스토어에 비동기적으로 데이터를 넣을 때 사용
-      store.dispatch('posts/loadPosts');
+      return store.dispatch('posts/loadPosts');
     },
-    // asyncData(){
+    // asyncData(){ // 컴포넌트가 마운트되기 전, 비동기적으로 채워지는 data.
+    //   return {}
     // },
     mounted(){
+      //this.$store.dispatch('posts/loadPosts');
       window.addEventListener('scroll', this.onScroll);
     },
     beforeDestroy(){
