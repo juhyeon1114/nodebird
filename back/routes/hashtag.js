@@ -2,20 +2,22 @@ const express = require('express');
 const db = require('../models');
 const router = express.Router();
 
-router.get('/', async (req, res, next) => { // GET /posts?offset=10&limit=10
+router.get('/:tag', async (req, res, next) => {
     try {
         let where = {};
         if (parseInt(req.query.lastId, 10)) {
             where = {
                 id: {
-                    [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10), // less than
-                    // lt(미만), lte(이하), gt(초과), gte(이하), ne(불일치), in, nin등등
+                    [db.Sequelize.Op.lt]: parseInt(req.query.lastId, 10),
                 }
             }
         }
         const posts = await db.Post.findAll({
             where,
             include : [{
+                model: db.Hashtag,
+                where: { name: decodeURIComponent(req.params.tag) }, //한글사용을 위한 decode...
+            }, {
                 model: db.User,
                 attributes:['id', 'nickname'],
             }, {
@@ -41,7 +43,7 @@ router.get('/', async (req, res, next) => { // GET /posts?offset=10&limit=10
         });
         res.json(posts);
     } catch (err) {
-        console.err(err);
+        console.error(err);
         next(err);
     }
 });

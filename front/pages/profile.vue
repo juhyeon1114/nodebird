@@ -60,14 +60,18 @@
       return {
         valid: false,
         name: 'Nuxt.js',
+        nickname:'',
         nicknameRules: [
           v => !!v || '닉네임을 입력하세요',
         ],
       };
     },
     fetch({store}){
-      store.dispatch('users/loadFollowers', {offset: 0});
-      return store.dispatch('users/loadFollowings', {offset: 0});
+      return Promise.all([
+        store.dispatch('users/loadFollowers', {offset: 0}),
+        store.dispatch('users/loadFollowings', {offset: 0})
+      ])
+      
     },
     methods:{
       onChangeNickname(){
@@ -75,11 +79,11 @@
           nickname: this.nickname,
         });
       },
-      removeFollower(id){
-        this.$store.dispatch('users/removeFollower',{ id : id });
+      removeFollower(userId){
+        this.$store.dispatch('users/removeFollower',{ userId });
       },
-      removeFollowing(id){
-        this.$store.dispatch('users/removeFollowing',{ id }); // 이름이 같으면 축약 가능
+      removeFollowing(userId){
+        this.$store.dispatch('users/unfollow',{ userId }); // 이름이 같으면 축약 가능
       },
       loadMoreFollowers(){
         this.$store.dispatch('users/loadFollowers');

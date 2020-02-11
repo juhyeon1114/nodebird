@@ -34,7 +34,7 @@
     },
     fetch({ store }){
       // 컴포넌트가 마운트되기 전에 스토어에 비동기적으로 데이터를 넣을 때 사용
-      return store.dispatch('posts/loadPosts');
+      return store.dispatch('posts/loadPosts', { reset: true });
     },
     // asyncData(){ // 컴포넌트가 마운트되기 전, 비동기적으로 채워지는 data.
     //   return {}

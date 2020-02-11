@@ -4,15 +4,17 @@ export const state = () => ({
     followingList : [],
     hasMoreFollowing: true,
     hasMoreFollower: true,
+    other: null,
 });
 
-const totalFollowers = 8;
-const totalFollowings = 6;
 const limit = 3;
 
 export const mutations = { //동기적 작업 (state변경)
     setMe(state, payload){
         state.me = payload;
+    },
+    setOther(state, payload){
+        state.other = payload;
     },
     changeNickname(state, payload){
         state.me.nickname = payload.nickname;
@@ -24,12 +26,16 @@ export const mutations = { //동기적 작업 (state변경)
         state.followerList.push(payload);
     },
     removeFollowing(state, payload){
-        const index = state.me.Followings.findIndex(v=>v.id === payload.userId);
+        let index = state.me.Followings.findIndex(v=>v.id === payload.userId);
         state.me.Followings.splice(index,1);
+        index = state.followingList.findIndex(v=>v.id === payload.userId);
+        state.followingList.splice(index, 1);
     },
     removeFollower(state, payload){
-        const index = state.followerList.findIndex(v=>v.id === payload.id);
-        state.followerList.splice(index,1);
+        let index = state.me.Followers.findIndex(v=>v.id === payload.userId);
+        state.me.Followers.splice(index,1);
+        index = state.followerList.findIndex(v=>v.id === payload.userId);
+        state.followerList.splice(index, 1);
     },
     loadFollowings(state, payload){
         if (payload.offset === 0){
@@ -58,6 +64,16 @@ export const actions = { //비동기적 작업 (서버통신)
                 withCredentials: true,
             })
             commit('setMe', res.data);
+        } catch (err) {
+            console.error(err);
+        }
+    },
+    async loadOther({ commit }, payload) {
+        try {
+            const res = await this.$axios.get(`/user/${payload.userId}`, {
+                withCredentials: true,
+            })
+            commit('setOther', res.data);
         } catch (err) {
             console.error(err);
         }
@@ -115,14 +131,8 @@ export const actions = { //비동기적 작업 (서버통신)
     addFollower({commit},payload){
         commit('addFollower', payload);
     },
-    removeFollowing({commit},payload){
-        commit('removeFollowing', payload);
-    },
-    removeFollower({commit},payload){
-        commit('removeFollower', payload);
-    },
     loadFollowers({commit, state}, payload){
-        if (!payload && payload.offset === 0 && !state.hasMoreFollower) {
+        if (!(payload && payload.offset === 0) && !state.hasMoreFollower) {
             return;
         }
         let offset = state.followerList.length;
@@ -143,7 +153,7 @@ export const actions = { //비동기적 작업 (서버통신)
         })
     },
     loadFollowings({commit, state}, payload){
-        if (!payload && payload.offset === 0 && !state.hasMoreFollowing) {
+        if (!(payload && payload.offset === 0) && !state.hasMoreFollowing) {
             return;
         }
         let offset = state.followingList.length;
@@ -177,7 +187,7 @@ export const actions = { //비동기적 작업 (서버통신)
         })
     },
     unfollow({ commit }, payload){
-        this.$axios.delete(`/user/${payload.userId}/follow`, { //delete 메소드는 두번째 인덱스에 data를 넣으면 안됨
+        return this.$axios.delete(`/user/${payload.userId}/follow`, { //delete 메소드는 두번째 인덱스에 data를 넣으면 안됨
             withCredentials: true,
         })
         .then((res)=>{
@@ -189,5 +199,17 @@ export const actions = { //비동기적 작업 (서버통신)
             console.error(err);
         })
     },
-
+    removeFollower({ commit }, payload) {
+        return this.$axios.delete(`/user/${payload.userId}/follower`, {
+            withCredentials: true,
+        })
+        .then((res)=>{
+            commit('removeFollower', {
+                userId: payload.userId,
+            });
+        })
+        .catch((err)=>{
+            console.error(err);
+        })
+    },
 };
