@@ -47,7 +47,7 @@ app.use(cookie('process.env.COOKIE_SECRET'));
 app.use(session({
     resave: false,
     saveUninitialized: false,
-    secret: 'process.env.COOKIE_SECRET', //암호화를 해제할 수 있는 비번(키)
+    secret: process.env.COOKIE_SECRET, //암호화를 해제할 수 있는 비번(키)
     cookie : {
         httpOnly : true,
         secure : false,
