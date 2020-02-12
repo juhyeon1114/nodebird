@@ -51,7 +51,7 @@ app.use(session({
     cookie : {
         httpOnly : true,
         secure : false,
-        domain: prod && '18.217.224.185'
+        domain: prod && '.18.217.224.185'
     }
 }));
 app.use(passport.initialize());
