@@ -16,6 +16,7 @@
                 </template>
                 <!-- <div>{{post.content}}</div> -->
             </div>
+            <div>{{$moment(post.createdAt).fromNow()}}</div>
         </v-card-text>
     </div>
 </template>

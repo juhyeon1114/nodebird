@@ -1,2 +1,8 @@
 package-lock.json
 package.json
+nuxt.config.js
+store
+pages
+middleware
+layouts
+components

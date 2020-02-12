@@ -82,7 +82,7 @@ export const actions = { //비동기적 작업 (서버통신)
         // context는 {commit, dispatch, state, rootState, getters, rootGetters}로 구조분해 가능.
         // (root가 붙은 것은 index모듈의 것)
         this.$axios.post('/user', {
-            email: payload.email,
+            userId: payload.userId,
             nickname: payload.nickname,
             password: payload.password,
         }, {
@@ -96,7 +96,7 @@ export const actions = { //비동기적 작업 (서버통신)
     },
     logIn( {commit}, payload){
         this.$axios.post("/user/login", {
-            email : payload.email,
+            userId : payload.userId,
             nickname : payload.nickname,
             password : payload.password,
         }, {
