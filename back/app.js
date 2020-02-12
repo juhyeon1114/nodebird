@@ -43,7 +43,7 @@ if (prod) {
 app.use('/', express.static('uploads')); //front에서 uploads 폴더에 접근할 수 있다. '/' = 프론트에서 접근할 주소(가상의 주소, 보안)
 app.use(express.json()); //express에서 json데이터를 요청 받기 위함
 app.use(express.urlencoded({extended: false})); //form을 통해서 넘어온 데이터를 받을 때 사용
-app.use(cookie('process.env.COOKIE_SECRET'));
+app.use(cookie(process.env.COOKIE_SECRET));
 app.use(session({
     resave: false,
     saveUninitialized: false,
