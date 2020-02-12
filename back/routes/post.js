@@ -2,21 +2,38 @@ const express = require('express');
 const multer = require('multer'); // form data 해석을 위함
 const path = require('path');
 
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
+
 const db = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
+AWS.config.update({
+    region: 'us-east-2',
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+});
+
 const upload = multer({
-    storage : multer.diskStorage({
-        destination(req, file, done){
-            done(null, 'uploads'); // uploads라는 경로에 업로드
-        },
-        filename(req, file, done){
-            const ext = path.extname(file.originalname);
-            const basename = path.basename(file.originalname, ext);
-            // example.png -> basename = example, ext = .pngf
-            done(null, basename + Date.now() + ext);
+    // storage : multer.diskStorage({
+    //     destination(req, file, done){
+    //         done(null, 'uploads'); // uploads라는 경로에 업로드
+    //     },
+    //     filename(req, file, done){
+    //         const ext = path.extname(file.originalname);
+    //         const basename = path.basename(file.originalname, ext);
+    //         // example.png -> basename = example, ext = .pngf
+    //         done(null, basename + Date.now() + ext);
+    //     }
+    // }),
+
+    storage: multerS3 ({
+        s3: new AWS.S3(),
+        bucket: 'nodebird-jh',
+        key (req, file, cb){
+            cb(null, `original/${Date.now()}${path.basename(file.originalname)}`)
         }
     }),
     limit : {fileSize: 20 * 1024 * 1024}, //20 MB (20byte * 1024 * 1024)
@@ -28,7 +45,8 @@ router.post('/images', isLoggedIn, upload.array('image'), (req, res) => {
     // upload.fields(키 값들) -> 다른 키로 여러 개
     // upload.none() -> 파일 업로드 x
     // console.log(req.files);
-    res.json(req.files.map(v => v.filename));
+    // res.json(req.files.map(v => v.filename)); //(구)
+    res.json(req.files.map(v => v.location));
 });
 
 router.post('/', isLoggedIn, async (req, res) => {
