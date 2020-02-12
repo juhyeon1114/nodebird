@@ -25,7 +25,7 @@
     "build": "nuxt build",
     "generate":"nuxt generate",
     "prestart": "npm run build",
-    "start": "cross-env PORT=80 NODE_ENV=production pm2 start server",
+    "start": "cross-env PORT=80 NODE_ENV=production pm2 start server.js",
     "lint": "eslint **/*"
   },
   "author": "",
