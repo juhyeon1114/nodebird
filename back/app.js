@@ -15,7 +15,6 @@ const userRouter = require('./routes/user');
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const hashtagRouter = require('./routes/hashtag');
-
 const app = express();
 
 dotenv.config();
@@ -56,7 +55,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.get('/',(req, res)=>{
     res.status(200).send('hello backend');
 });
