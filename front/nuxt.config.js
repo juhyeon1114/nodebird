@@ -51,8 +51,8 @@ module.exports = {
     plugins : [],
     vuetify : {},
     axios: {
-        browserBaseURL: 'http://localhost:3085', // client에서 axios보낼 때
-        baseURL: 'http://localhost:3085', // 서버에서 axios보낼 때
+        browserBaseURL: process.env.NODE_ENV === 'production' ? 'http://3.20.185.156' : 'http://localhost:3085', // client에서 axios보낼 때
+        baseURL: process.env.NODE_ENV === 'production' ? 'http://3.20.185.156' : 'http://localhost:3085', // 서버에서 axios보낼 때
         https: false,
     },
     server: {
