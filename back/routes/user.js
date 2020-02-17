@@ -38,6 +38,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.post('/', isNotLoggedIn, async (req, res, next) => {
+    console.log(req.body);
     try {
         const hash = await bcrypt.hash(req.body.password, 12);
         const exUser = await db.User.findOne({

@@ -86,7 +86,7 @@ export const actions = { //비동기적 작업 (서버통신)
             nickname: payload.nickname,
             password: payload.password,
         }, {
-            withCredentials : true, // 프론트와 백 사이의 쿠키 저장을 허용 (in axios)
+            withCredentials: true, // 프론트와 백 사이의 쿠키 저장을 허용 (in axios)
         } ).then((res)=>{
             commit('setMe', res.data);
         }).catch((err)=>{
