@@ -7,7 +7,7 @@
     "@nuxtjs/axios": "^5.6.0",
     "@nuxtjs/moment": "^1.6.0",
     "@nuxtjs/vuetify": "^1.6.3",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "cross-env": "^7.0.0",
     "express": "^4.17.1",
     "lodash.throttle": "^4.1.1",
@@ -23,7 +23,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "generate":"nuxt generate",
+    "generate": "nuxt generate",
     "prestart": "npm run build",
     "start": "cross-env PORT=80 NODE_ENV=production pm2 start server.js",
     "lint": "eslint **/*"
